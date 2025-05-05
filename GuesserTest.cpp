@@ -75,3 +75,43 @@ TEST(GuesserTest, match_test_locked_out_by_distance)
 	bool match = guesser.match("Secret");
 	ASSERT_FALSE( match );
 }
+
+//Test Remaining is three with no guesses 
+TEST(GuesserTest, remaining_test_no_guesses_made)
+{
+	Guesser guesser("Secret");
+	int remaining = guesser.remaining();
+	ASSERT_EQ(remaining, 3);
+}
+
+//Test Remaining doesn't go below 0 after 3+ guesses
+TEST(GuesserTest, remaining_test_after_three_plus_incorrect)
+{
+	Guesser guesser("Secret");
+	guesser.match("Secrets");
+	guesser.match("Secrets");
+	guesser.match("Secrets");
+	guesser.match("Secrets");
+	int remaining = guesser.remaining();
+	ASSERT_EQ(remaining, 0);
+}
+
+//Test Remaining counts down after locked due to way off distance guess
+TEST(GuesserTest, remaining_test_count_down_after_lock)
+{
+	Guesser guesser("Secret");
+	guesser.match("FALSE");
+	guesser.match("Secrets");
+	int remaining = guesser.remaining();
+	ASSERT_EQ(remaining, 1);	
+}
+
+//Test Remaining resets after correct guess
+TEST(GuesserTest, remaining_test_reset_after_correct_guess)
+{
+	Guesser guesser("Secret");
+	guesser.match("Secrets");
+	guesser.match("Secret");
+	int remaining = guesser.remaining();
+	ASSERT_EQ(remaining, 3);	
+}
